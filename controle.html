@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Controle da live — fora da transmissão</title>
+  <link rel="stylesheet" href="css/style.css?v=9" />
+  <link rel="stylesheet" href="css/control.css?v=1" />
+</head>
+<body class="control-page">
+  <header class="ctrl-bar">
+    <div class="ctrl-bar__left">
+      <span class="ctrl-dot" id="ctrlDot"></span>
+      <strong>CONTROLE FORA DA LIVE</strong>
+      <span class="ctrl-status" id="ctrlStatus">conectando à live…</span>
+    </div>
+    <div class="ctrl-bar__right">
+      <button class="btn" id="btnSync" type="button">Atualizar valores</button>
+      <a class="btn btn--primary" href="index.html?obs=1" target="_blank" rel="noopener">Abrir a live</a>
+    </div>
+  </header>
+
+  <p class="ctrl-hint">
+    Esta página é só para você: deixe a fonte do OBS aberta em <code>index.html?obs=1</code>.
+    Tudo o que você mudar aqui aparece na hora na live, sem mostrar o painel na transmissão.
+  </p>
+
+  <div class="ctrl-host" id="panelHost"></div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/utils.js?v=17"></script>
+  <script src="js/data.js?v=17"></script>
+  <script src="js/storage.js?v=17"></script>
+  <script src="js/settings.js?v=17"></script>
+  <script src="js/sync.js?v=1"></script>
+  <script src="js/control.js?v=1"></script>
+</body>
+</html>

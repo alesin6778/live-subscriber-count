@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TOP 50 LIVE SUBSCRIBER COUNT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@500;600;700;800&family=Bebas+Neue&family=Inter:wght@500;600;700;800&family=Montserrat:wght@500;600;700;800&family=Oswald:wght@500;600;700&family=Poppins:wght@500;600;700;800&family=Raleway:wght@500;600;700;800&family=Roboto:wght@500;700;900&family=Sora:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=12" />
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ============================ HEADER ============================ -->
+    <header class="topbar" id="topbar">
+      <h1 class="brand">TOP 50 LIVE SUBSCRIBER COUNT</h1>
+
+      <div class="header-right">
+        <div class="stats">
+          <div class="stat">
+            <b id="viewers">0</b><span>VIEWERS</span>
+          </div>
+          <span class="sep">|</span>
+          <div class="stat">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7 10.2V21H3.2A1.2 1.2 0 0 1 2 19.8v-8.4C2 10.6 2.6 10 3.2 10H7zm3 0 3.9-7.8c.3-.6 1-.9 1.6-.6l1.4.6c.9.4 1.2 1.5.8 2.4L16 8.6h4.7c1.2 0 2.1 1.1 1.8 2.3l-1.6 7.7a2 2 0 0 1-2 1.4H10z"
+                fill="currentColor" />
+            </svg>
+            <b id="likes">0</b><span>LIKES</span>
+          </div>
+          <span class="sep">|</span>
+          <div class="stat">
+            <b id="totalSubs">0</b><span>TOTAL SUBSCRIBERS</span>
+          </div>
+        </div>
+
+        <!-- canais que mais crescem, atualizado automaticamente -->
+        <div class="hot" id="hotList" aria-label="Canais crescendo mais rápido"></div>
+      </div>
+    </header>
+
+    <!-- ============================ GRID 5 x 10 ============================ -->
+    <main class="board" id="board" aria-label="Ranking dos 50 canais"></main>
+
+    <!-- ============================ FOOTER / SUB GAP ============================ -->
+    <footer class="subgap" id="subgap">
+      <div class="sg-side sg-side--left" id="sgLeft">
+        <div class="sg-badge" id="sgLeftRank">#01</div>
+        <div class="sg-avatar" id="sgLeftAvatar"></div>
+        <div class="sg-meta">
+          <div class="sg-name" id="sgLeftName">&mdash;</div>
+          <div class="sg-count" id="sgLeftCount">0</div>
+        </div>
+      </div>
+
+      <div class="sg-gap">
+        <div class="sg-gap-label">SUB GAP</div>
+        <div class="sg-gap-value">
+          <span id="sgGap">0</span>
+          <span class="sg-gap-arrow down" id="sgArrow">&#9660;</span>
+        </div>
+      </div>
+
+      <div class="sg-side sg-side--right" id="sgRight">
+        <div class="sg-meta">
+          <div class="sg-name" id="sgRightName">&mdash;</div>
+          <div class="sg-count" id="sgRightCount">0</div>
+        </div>
+        <div class="sg-avatar" id="sgRightAvatar"></div>
+        <div class="sg-badge" id="sgRightRank">#02</div>
+      </div>
+
+      <div class="sg-timer">
+        <div class="sg-timer-label">ESTIMATED TIME UNTIL RANK CHANGE :</div>
+        <div class="sg-timer-digits" id="sgTimer">
+          <div class="td"><span id="tDay">00</span><small>DAY</small></div>
+          <div class="td"><span id="tHrs">00</span><small>HRS</small></div>
+          <div class="td"><span id="tMin">00</span><small>MIN</small></div>
+          <div class="td"><span id="tSec">00</span><small>SEC</small></div>
+        </div>
+        <div class="sg-urgent" id="tUrgent" hidden>ULTRAPASSAGEM IMINENTE!</div>
+        <div class="sg-note" id="tNote" hidden>SEM PREVIS&Atilde;O COM AS VELOCIDADES ATUAIS</div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================ CONTROLES FLUTUANTES ============================ -->
+  <div class="pause-badge" id="pauseBadge" hidden>PAUSADO</div>
+  <button class="settings-fab" id="btnSettings" type="button" title="Painel de controle (S)"
+    aria-label="Abrir painel de controle">&#9881;</button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ============================ PAINEL DE CONTROLE ============================ -->
+  <div class="modal" id="settingsModal" hidden>
+    <div class="modal__scrim" data-close="1"></div>
+
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <header class="modal__head">
+        <div>
+          <h2 id="settingsTitle">Painel de Controle</h2>
+          <p class="modal__sub">Simula&ccedil;&atilde;o 100% local &middot; altera&ccedil;&otilde;es salvas automaticamente</p>
+        </div>
+        <button class="icon-btn" type="button" data-close="1" aria-label="Fechar painel">&#10005;</button>
+      </header>
+
+      <nav class="tabs" id="settingsTabs">
+        <button class="tab is-active" type="button" data-tab="canais">Canais</button>
+        <button class="tab" type="button" data-tab="simulacao">Simula&ccedil;&atilde;o</button>
+        <button class="tab" type="button" data-tab="aparencia">Apar&ecirc;ncia</button>
+        <button class="tab" type="button" data-tab="dados">Dados</button>
+        <button class="tab" type="button" data-tab="eventos">Eventos</button>
+      </nav>
+
+      <div class="modal__body">
+
+        <!-- ---------------------------- CANAIS ---------------------------- -->
+        <section class="tabpane is-active" data-pane="canais">
+          <div class="pane-tools">
+            <input class="input" id="channelSearch" type="search" placeholder="Buscar canal pelo nome..." />
+            <span class="hint" id="channelCount">50 canais</span>
+            <button class="btn btn--primary" id="btnAddChannel" type="button">+ Adicionar canal</button>
+          </div>
+
+          <div class="editor-head">
+            <span>#</span><span>Nome</span><span>Imagem (URL)</span><span>Cor</span>
+            <span>Inscritos</span><span>Cresc. m&iacute;n.</span><span>Cresc. m&aacute;x.</span><span>Ativo</span><span></span><span></span>
+          </div>
+          <div class="editor" id="channelEditor"></div>
+
+          <p class="hint">
+            A cada atualiza&ccedil;&atilde;o o canal cresce (ou cai) um valor inteiro sorteado entre
+            &ldquo;Cresc. m&iacute;n.&rdquo; e &ldquo;Cresc. m&aacute;x.&rdquo;. Use valores negativos para canais em queda e
+            0 para canal parado. O bot&atilde;o &#8635; restaura o canal para os valores de <code>js/data.js</code>.
+          </p>
+          <p class="hint">
+            <strong>Canais extras</strong> (bot&atilde;o acima) entram ocultos abaixo do top 50, continuam
+            simulando e aparecem no placar assim que entram no top 50 &mdash; empurrando o 50&ordm; para fora.
+            Use &#10005; para remover um canal extra.
+          </p>
+        </section>
+
+        <!-- ---------------------------- SIMULAÇÃO ---------------------------- -->
+        <section class="tabpane" data-pane="simulacao">
+          <div class="cards-2">
+            <div class="box">
+              <h3>Controles da simula&ccedil;&atilde;o</h3>
+              <div class="btn-row">
+                <button class="btn btn--primary" id="btnStart" type="button">Iniciar</button>
+                <button class="btn" id="btnPause" type="button">Pausar</button>
+                <button class="btn" id="btnRestart" type="button">Reiniciar</button>
+                <button class="btn" id="btnResetCounts" type="button">Zerar contagens</button>
+              </div>
+              <p class="hint" id="simStatus">&mdash;</p>
+
+              <label class="field">
+                <span>Velocidade global</span>
+                <select class="input" id="inpGlobalSpeed">
+                  <option value="0.5">0,5&times;</option>
+                  <option value="1">1&times;</option>
+                  <option value="2">2&times;</option>
+                  <option value="5">5&times;</option>
+                  <option value="10">10&times;</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Atualiza&ccedil;&atilde;o de cada canal</span>
+                <select class="input" id="inpUpdateMs">
+                  <option value="1000">1 segundo</option>
+                  <option value="2000">2 segundos</option>
+                  <option value="3000">3 segundos</option>
+                  <option value="5000">5 segundos</option>
+                </select>
+              </label>
+
+              <p class="hint">
+                Cada canal sorteia um instante aleat&oacute;rio dentro do intervalo, ent&atilde;o os 50 nunca mudam
+                no mesmo momento. O n&uacute;mero conta at&eacute; o novo valor e fica verde (subiu) ou vermelho
+                (caiu) por 1 segundo.
+              </p>
+            </div>
+
+            <div class="box">
+              <h3>Estat&iacute;sticas da live</h3>
+              <div class="field-row">
+                <label class="field">
+                  <span>Viewers</span>
+                  <input class="input" id="inpViewers" type="number" min="0" step="1" />
+                </label>
+                <label class="field">
+                  <span>Likes</span>
+                  <input class="input" id="inpLikes" type="number" min="0" step="1" />
+                </label>
+              </div>
+
+              <h3 class="mt">Disputa do SUB GAP</h3>
+              <div class="field-row">
+                <label class="field">
+                  <span>Da posi&ccedil;&atilde;o</span>
+                  <input class="input" id="inpGapFrom" type="number" min="1" max="499" step="1" />
+                </label>
+                <label class="field">
+                  <span>At&eacute; a posi&ccedil;&atilde;o</span>
+                  <input class="input" id="inpGapTo" type="number" min="2" max="500" step="1" />
+                </label>
+              </div>
+              <p class="hint">
+                A dupla em foco &eacute; a que vai mudar mais r&aacute;pido dentro desta faixa (diferen&ccedil;a &divide;
+                velocidade relativa). As 3 duplas mais r&aacute;pido recebem um raio entre os dois canais. Quando a
+                diferen&ccedil;a chega a zero, a dupla continua em foco por 3 segundos e depois a pr&oacute;xima assume.
+              </p>
+
+              <label class="field">
+                <span>Dura&ccedil;&atilde;o da anima&ccedil;&atilde;o de ultrapassagem</span>
+                <input class="input" id="inpAnimMs" type="range" min="0" max="1500" step="50" />
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- ---------------------------- APARÊNCIA ---------------------------- -->
+        <section class="tabpane" data-pane="aparencia">
+          <div class="cards-2">
+            <div class="box">
+              <h3>Cores e tipografia</h3>
+              <div class="field-row">
+                <label class="field">
+                  <span>Fundo</span>
+                  <input class="input input--color" id="inpBg" type="color" />
+                </label>
+                <label class="field">
+                  <span>Cards</span>
+                  <input class="input input--color" id="inpCardBg" type="color" />
+                </label>
+              </div>
+              <div class="field-row">
+                <label class="field">
+                  <span>Bordas</span>
+                  <input class="input input--color" id="inpBorderColor" type="color" />
+                </label>
+                <label class="field">
+                  <span>N&uacute;meros</span>
+                  <input class="input input--color" id="inpNumberColor" type="color" />
+                </label>
+              </div>
+              <div class="field-row">
+                <label class="field">
+                  <span>Nomes dos canais</span>
+                  <input class="input input--color" id="inpNameColor" type="color" />
+                </label>
+                <label class="field">
+                  <span>N&uacute;mero da posi&ccedil;&atilde;o</span>
+                  <input class="input input--color" id="inpRankColor" type="color" />
+                </label>
+              </div>
+
+              <label class="field">
+                <span>Separador de milhar</span>
+                <select class="input" id="inpSeparator">
+                  <option value=",">1,234,567 (como nas imagens)</option>
+                  <option value=".">1.234.567 (pt-BR)</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Fonte</span>
+                <select class="input" id="inpFont">
+                  <option value="Montserrat">Montserrat</option>
+                  <option value="Inter">Inter</option>
+                  <option value="Roboto">Roboto</option>
+                  <option value="Poppins">Poppins</option>
+                  <option value="Oswald">Oswald</option>
+                  <option value="Bebas Neue">Bebas Neue</option>
+                  <option value="Anton">Anton</option>
+                  <option value="Archivo">Archivo</option>
+                  <option value="Raleway">Raleway</option>
+                  <option value="Sora">Sora</option>
+                  <option value="Space Grotesk">Space Grotesk</option>
+                  <option value="Calibri">Calibri</option>
+                  <option value="Arial">Arial</option>
+                  <option value="Segoe UI">Segoe UI</option>
+                  <option value="Verdana">Verdana</option>
+                  <option value="Trebuchet MS">Trebuchet MS</option>
+                  <option value="Tahoma">Tahoma</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="system">Fonte do sistema</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Sombra dos cards</span>
+                <input class="input" id="inpShadow" type="range" min="0" max="2" step="0.1" />
+              </label>
+
+              <label class="field">
+                <span>Anima&ccedil;&otilde;es</span>
+                <select class="input" id="inpAnim">
+                  <option value="full">Completas</option>
+                  <option value="reduced">Reduzidas</option>
+                  <option value="off">Desligadas</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="box">
+              <h3>Elementos vis&iacute;veis</h3>
+              <label class="field field--check">
+                <input type="checkbox" id="inpShowIndicators" />
+                <span>Indicadores de tend&ecirc;ncia (fogos, seta e raios)</span>
+              </label>
+              <label class="field field--check">
+                <input type="checkbox" id="inpShowHeader" />
+                <span>Cabe&ccedil;alho</span>
+              </label>
+              <label class="field field--check">
+                <input type="checkbox" id="inpShowFooter" />
+                <span>Rodap&eacute; (SUB GAP)</span>
+              </label>
+              <label class="field field--check">
+                <input type="checkbox" id="inpObsMode" />
+                <span>Modo transmiss&atilde;o (OBS) &mdash; oculta os controles</span>
+              </label>
+              <label class="field field--check">
+                <input type="checkbox" id="inpTransparent" />
+                <span>Fundo transparente (para OBS)</span>
+              </label>
+              <label class="field field--check">
+                <input type="checkbox" id="inpNoGradients" />
+                <span>Sem degrad&ecirc;s (cores lisas em tudo)</span>
+              </label>
+
+              <div class="btn-row mt">
+                <button class="btn" id="btnResetVisual" type="button">Restaurar apar&ecirc;ncia padr&atilde;o</button>
+              </div>
+              <p class="hint">
+                Atalhos: <kbd>S</kbd> ou <kbd>C</kbd> abrem este painel, <kbd>Espa&ccedil;o</kbd>
+                pausa/continua e <kbd>Shift</kbd>+<kbd>O</kbd> alterna o modo transmiss&atilde;o
+                (com ele ligado, nada disso aparece na stream).
+              </p>
+            </div>
+          </div>
+
+          <div class="box">
+            <h3>Fogos e alertas</h3>
+            <label class="field field--check">
+              <input type="checkbox" id="inpAutoFire" />
+              <span>Fogos autom&aacute;ticos de acordo com o crescimento</span>
+            </label>
+            <div class="field-row">
+              <label class="field">
+                <span>Fogo normal a partir de</span>
+                <input class="input" id="inpFireMin" type="number" min="0" step="1" />
+              </label>
+              <label class="field">
+                <span>Fogo azul a partir de</span>
+                <input class="input" id="inpBlueFireMin" type="number" min="0" step="1" />
+              </label>
+            </div>
+            <div class="field-row">
+              <label class="field field--check">
+                <input type="checkbox" id="inpAutoGap" />
+                <span>Destacar canais prestes a se ultrapassar</span>
+              </label>
+              <label class="field">
+                <span>Alertar se faltar at&eacute; (segundos)</span>
+                <input class="input" id="inpAutoGapSeconds" type="number" min="10" max="604800" step="10" />
+              </label>
+            </div>
+            <div class="field-row">
+              <label class="field">
+                <span>M&aacute;ximo de pares em alerta</span>
+                <input class="input" id="inpAutoGapPairs" type="number" min="1" max="10" step="1" />
+              </label>
+              <label class="field">
+                <span>Cor do raio e do alerta</span>
+                <input class="input input--color" id="inpAlertColor" type="color" />
+              </label>
+            </div>
+            <p class="hint">
+              Os valores dos fogos s&atilde;o inscritos ganhos em uma &uacute;nica atualiza&ccedil;&atilde;o do canal.
+              Acima do limite normal aparece o fogo laranja; acima do limite azul aparece o fogo azul.
+              Canais que perdem inscritos mostram uma seta vermelha para baixo embaixo da posi&ccedil;&atilde;o.
+            </p>
+          </div>
+
+          <div class="box">
+            <h3>Personaliza&ccedil;&atilde;o dos cards</h3>
+            <div class="field-row">
+              <label class="field">
+                <span>Escala dos n&uacute;meros</span>
+                <input class="input" id="inpCountScale" type="range" min="0.8" max="1.3" step="0.05" />
+              </label>
+              <label class="field">
+                <span>Arredondamento dos cards</span>
+                <input class="input" id="inpCardRadius" type="range" min="0" max="12" step="1" />
+              </label>
+            </div>
+            <div class="field-row">
+              <label class="field">
+                <span>Espa&ccedil;o entre cards</span>
+                <input class="input" id="inpCardGap" type="range" min="0" max="8" step="0.5" />
+              </label>
+              <div class="field field--check">
+                <input type="checkbox" id="inpShowNames" />
+                <span>Mostrar nomes</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field field--check">
+                <input type="checkbox" id="inpShowAvatars" />
+                <span>Mostrar avatares</span>
+              </div>
+              <div class="field field--check">
+                <input type="checkbox" id="inpUpperNames" />
+                <span>Nomes em mai&uacute;sculas</span>
+              </div>
+            </div>
+
+            <h3 class="mt">Tamanhos</h3>
+            <div class="field-row">
+              <label class="field">
+                <span>Nomes dos canais</span>
+                <input class="input" id="inpNameScale" type="range" min="0.6" max="1.6" step="0.05" />
+              </label>
+              <label class="field">
+                <span>N&uacute;meros da posi&ccedil;&atilde;o</span>
+                <input class="input" id="inpRankScale" type="range" min="0.6" max="1.6" step="0.05" />
+              </label>
+            </div>
+            <div class="field-row">
+              <label class="field">
+                <span>Avatares dos cards</span>
+                <input class="input" id="inpAvatarScale" type="range" min="0.7" max="1.3" step="0.05" />
+              </label>
+              <label class="field">
+                <span>Rodap&eacute; (nomes, n&uacute;meros e avatares)</span>
+                <input class="input" id="inpFooterScale" type="range" min="0.7" max="1.3" step="0.05" />
+              </label>
+            </div>
+            <div class="field-row">
+              <label class="field">
+                <span>N&uacute;mero da gap</span>
+                <input class="input" id="inpGapScale" type="range" min="0.7" max="1.4" step="0.05" />
+              </label>
+              <label class="field">
+                <span>Cabe&ccedil;alho</span>
+                <input class="input" id="inpHeaderScale" type="range" min="0.7" max="1.35" step="0.05" />
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- ---------------------------- DADOS ---------------------------- -->
+        <section class="tabpane" data-pane="dados">
+          <div class="cards-2">
+            <div class="box">
+              <h3>Exportar</h3>
+              <p class="hint">Baixe um JSON com os 50 canais, contagens, velocidades, prefer&ecirc;ncias e apar&ecirc;ncia.</p>
+              <button class="btn btn--primary" id="btnExport" type="button">Exportar configura&ccedil;&otilde;es</button>
+            </div>
+
+            <div class="box">
+              <h3>Importar</h3>
+              <p class="hint">O arquivo &eacute; validado antes de substituir os dados atuais. Nada &eacute; aplicado se houver erro.</p>
+              <input class="input" id="fileImport" type="file" accept="application/json,.json" />
+              <p class="hint" id="importStatus"></p>
+            </div>
+          </div>
+
+          <div class="box">
+            <h3>Zona de risco</h3>
+            <p class="hint">
+              Restaura os 50 canais e todas as configura&ccedil;&otilde;es para os valores originais de
+              <code>js/data.js</code> e limpa o armazenamento local.
+            </p>
+            <button class="btn btn--danger" id="btnRestore" type="button">Restaurar tudo</button>
+            <p class="hint" id="storageStatus"></p>
+          </div>
+        </section>
+
+        <!-- ---------------------------- EVENTOS ---------------------------- -->
+        <section class="tabpane" data-pane="eventos">
+          <div class="box">
+            <h3>Estat&iacute;sticas de crescimento</h3>
+            <div class="stats-grid" id="liveStats"></div>
+          </div>
+
+          <div class="box">
+            <h3>Ultrapassagens recentes</h3>
+            <ol class="event-log" id="eventLog"></ol>
+            <button class="btn mt" id="btnClearEvents" type="button">Limpar registro</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <noscript>Esta aplica&ccedil;&atilde;o precisa de JavaScript ativado para funcionar.</noscript>
+
+  <script src="js/utils.js?v=18"></script>
+  <script src="js/data.js?v=18"></script>
+  <script src="js/storage.js?v=18"></script>
+  <script src="js/ranking.js?v=17"></script>
+  <script src="js/simulation.js?v=17"></script>
+  <script src="js/gap.js?v=17"></script>
+  <script src="js/settings.js?v=18"></script>
+  <script src="js/sync.js?v=1"></script>
+  <script src="js/app.js?v=19"></script>
+  <script src="js/bridge.js?v=1"></script>
+</body>
+</html>
